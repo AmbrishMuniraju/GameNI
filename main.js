@@ -144,8 +144,8 @@ function renderGameCard(g) {
       <div class="game-actions">
         <button class="btn btn-outline btn-watch" style="flex:1" data-id="${g.id}"><i class="far fa-star"></i> Watch</button>
         ${hasJoined ? `
-          <button class="btn btn-outline ${isHost ? 'btn-cancel-match' : 'btn-leave'}" 
-                  style="flex:2; border-color:var(--danger); color:var(--danger);" 
+          <button class="btn btn-leave-match ${isHost ? 'btn-cancel-match' : 'btn-leave'}"
+                  style="flex:2;"
                   data-id="${g.id}">
             <i class="fas fa-sign-out-alt"></i> ${isHost ? 'Cancel Match' : 'Leave Match'}
           </button>
@@ -163,7 +163,11 @@ function renderGameCard(g) {
 // ── Pages ──
 function renderHome() {
   const hour = new Date().getHours();
-  const greeting = hour < 12 ? 'Good Morning' : hour < 17 ? 'Good Afternoon' : 'Evening';
+  const headline = hour < 6  ? 'Belfast\nNever Sleeps.'  :
+                   hour < 12 ? 'Lace Up,\nBelfast.'      :
+                   hour < 17 ? 'Game On,\nBelfast.'      :
+                   hour < 21 ? 'Tonight,\nBelfast Plays.':
+                               'One More Game,\nBelfast.';
   const dateStr = new Date().toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' });
 
   const sportCounts = {};
@@ -187,7 +191,7 @@ function renderHome() {
       <div class="home-hero-v2">
         <div class="home-hero-left">
           <div class="home-hero-eyebrow"><span class="live-dot"></span>${dateStr}</div>
-          <h1 class="home-hero-title">${greeting},<br>Belfast.</h1>
+          <h1 class="home-hero-title">${headline.replace('\n','<br>')}</h1>
           <p class="home-hero-sub">Find your sport. Join a game. Book a pitch.</p>
           <div class="home-hero-stats">
             <div class="home-hero-stat"><strong>${GAMES.length}</strong><span>Games listed</span></div>
@@ -934,22 +938,25 @@ function bindPageEvents() {
   $$('.btn-leave').forEach(el => {
     el.addEventListener('click', async (e) => {
       e.stopPropagation();
+      if (!currentUser) { toast('Please log in first.', 'error'); return; }
       const gameId = el.dataset.id;
       const g = GAMES.find(x => x.id === gameId);
       if (!g) return;
 
-      if (confirm(`Are you sure you want to leave "${g.title}"?`)) {
-        try {
-          const gameRef = doc(db, "games", gameId);
-          await updateDoc(gameRef, {
-            players: arrayRemove(currentUser.uid),
-            slotsLeft: increment(1)
-          });
-          toast(`You have left "${g.title}".`, 'info');
-        } catch (err) {
-          console.error("Error leaving game:", err);
-          toast('Failed to leave match.', 'error');
-        }
+      el.disabled = true;
+      el.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Leaving...';
+      try {
+        const gameRef = doc(db, 'games', gameId);
+        await updateDoc(gameRef, {
+          players: arrayRemove(currentUser.uid),
+          slotsLeft: increment(1)
+        });
+        toast(`Left "${g.title}" successfully.`);
+      } catch (err) {
+        console.error('Error leaving game:', err);
+        toast('Could not leave match — ' + err.message, 'error');
+        el.disabled = false;
+        el.innerHTML = '<i class="fas fa-sign-out-alt"></i> Leave Match';
       }
     });
   });
