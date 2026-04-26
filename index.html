@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="GameNI — Belfast's sports booking and matchmaking platform." />
-  <title>GameNI – Your Court is Waiting</title>
+  <meta name="description" content="GameNI - Belfast's Sports Matchmaking Platform" />
+  <title>GameNI – Book Venues & Find Players</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="/style.css" />
 </head>
@@ -15,7 +15,7 @@
 
   <div class="app-shell">
 
-    <!-- ── Top Nav ── -->
+    <!-- Top Nav -->
     <header class="top-nav">
       <button class="top-nav-brand" id="nav-logo">
         <span class="brand-bolt">⚡</span>
@@ -26,31 +26,27 @@
         <span class="city-live-dot"></span>
         <select id="city-select" class="city-select">
           <option value="belfast">Belfast</option>
-          <option value="derry" disabled>Derry — soon</option>
+          <option value="derry" disabled>Derry</option>
         </select>
       </div>
 
       <div class="top-nav-right">
-        <div id="auth-controls-container">
-          <div id="unauth-controls" class="nav-auth-row">
-            <button class="btn-ghost-nav" id="btn-login">Log in</button>
-            <button class="btn-pill-nav" id="btn-signup">Sign up</button>
-          </div>
-          <div id="auth-controls" class="hidden nav-user-row">
-            <div class="nav-avatar" id="user-avatar-initials">U</div>
-            <span id="user-display-name" class="nav-user-name"></span>
-            <button class="btn-icon-nav" id="btn-logout" aria-label="Log out">
-              <i class="fas fa-sign-out-alt"></i>
-            </button>
-          </div>
+        <div id="unauth-controls" class="nav-auth-row">
+          <button class="btn-ghost-nav" id="btn-login">Log in</button>
+          <button class="btn-pill-nav" id="btn-signup">Sign up</button>
+        </div>
+        <div id="auth-controls" class="nav-user-row hidden">
+          <div class="nav-avatar" id="user-avatar-initials">U</div>
+          <span class="nav-user-name" id="user-display-name"></span>
+          <button class="btn-icon-nav" id="btn-logout" aria-label="Log Out"><i class="fas fa-sign-out-alt"></i></button>
         </div>
       </div>
     </header>
 
-    <!-- ── Content ── -->
+    <!-- Main Content -->
     <main id="app-content" class="content-area"></main>
 
-    <!-- ── Bottom Nav ── -->
+    <!-- Bottom Nav -->
     <nav class="bottom-nav">
       <button class="bnav-item active" data-page="home">
         <i class="fas fa-home"></i>
@@ -77,7 +73,7 @@
 
   <!-- Auth Modal -->
   <div class="modal-overlay" id="auth-modal">
-    <div class="modal">
+    <div class="modal" id="auth-modal-content">
       <button class="modal-close" id="modal-close"><i class="fas fa-times"></i></button>
       <div class="modal-body">
         <div class="auth-tabs">
@@ -87,26 +83,24 @@
         <form class="auth-form" id="login-form">
           <div class="form-group">
             <label for="login-email">Email</label>
-            <input type="email" id="login-email" placeholder="you@example.com" required>
+            <input type="email" id="login-email" placeholder="Enter your email" required>
           </div>
           <div class="form-group">
             <label for="login-password">Password</label>
-            <input type="password" id="login-password" placeholder="Your password" required>
+            <input type="password" id="login-password" placeholder="Enter your password" required>
           </div>
           <button type="submit" class="btn btn-primary btn-full" id="login-submit">Log In</button>
-          <div class="auth-divider"><span>or</span></div>
-          <button type="button" class="btn btn-social" id="google-login">
-            <i class="fab fa-google"></i> Continue with Google
-          </button>
+          <div class="auth-divider"><span>or continue with</span></div>
+          <button type="button" class="btn btn-social" id="google-login"><i class="fab fa-google"></i> Google</button>
         </form>
         <form class="auth-form hidden" id="signup-form">
           <div class="form-group">
             <label for="signup-name">Full Name</label>
-            <input type="text" id="signup-name" placeholder="Your name" required>
+            <input type="text" id="signup-name" placeholder="Enter your name" required>
           </div>
           <div class="form-group">
             <label for="signup-email">Email</label>
-            <input type="email" id="signup-email" placeholder="you@example.com" required>
+            <input type="email" id="signup-email" placeholder="Enter your email" required>
           </div>
           <div class="form-group">
             <label for="signup-password">Password</label>

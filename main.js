@@ -161,145 +161,115 @@ function renderGameCard(g) {
 }
 
 // ── Pages ──
-function renderHome() {
-  const hour = new Date().getHours();
-  const headline = hour < 6  ? 'Belfast\nNever Sleeps.'  :
-                   hour < 12 ? 'Lace Up,\nBelfast.'      :
-                   hour < 17 ? 'Game On,\nBelfast.'      :
-                   hour < 21 ? 'Tonight,\nBelfast Plays.':
-                               'One More Game,\nBelfast.';
-  const dateStr = new Date().toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' });
+const SPORT_ICONS = {
+  Football: { emoji: '⚽', bg: '#1B5E20', dark: '#0A3D12' },
+  Cricket:  { emoji: '🏏', bg: '#E65100', dark: '#BF360C' },
+  Badminton:{ emoji: '🏸', bg: '#01579B', dark: '#003F7A' },
+  Swimming: { emoji: '🏊', bg: '#006064', dark: '#004D40' },
+  Padel:    { emoji: '🎾', bg: '#4A148C', dark: '#320D62' },
+  Pickleball:{ emoji: '🏓', bg: '#880E4F', dark: '#620839' },
+};
 
+function renderHome() {
   const sportCounts = {};
   GAMES.forEach(g => { if (g.sport) sportCounts[g.sport] = (sportCounts[g.sport] || 0) + 1; });
 
-  const sportDefs = [
-    { name: 'Football',   icon: '⚽', c1: '#14532d', c2: '#16a34a' },
-    { name: 'Cricket',    icon: '🏏', c1: '#7c2d12', c2: '#ea580c' },
-    { name: 'Badminton',  icon: '🏸', c1: '#0c4a6e', c2: '#0284c7' },
-    { name: 'Swimming',   icon: '🏊', c1: '#1e3a5f', c2: '#2563eb' },
-    { name: 'Padel',      icon: '🎾', c1: '#4c1d95', c2: '#7c3aed' },
-    { name: 'Pickleball', icon: '🏓', c1: '#881337', c2: '#e11d48' },
-  ];
-
-  const liveGames = GAMES.filter(g => g.slotsLeft > 0).slice(0, 4);
-  const featuredVenue = VENUES.length > 0 ? [...VENUES].sort((a,b) => (parseInt(b.reviews)||0)-(parseInt(a.reviews)||0))[0] : null;
+  const liveGames = GAMES.filter(g => g.slotsLeft > 0).slice(0, 5);
+  const featuredVenues = VENUES.slice(0, 6);
 
   return `
-    <div class="home-v2">
+    <div class="playo-home">
 
-      <div class="home-hero-v2">
-        <div class="home-hero-left">
-          <div class="home-hero-eyebrow"><span class="live-dot"></span>${dateStr}</div>
-          <h1 class="home-hero-title">${headline.replace('\n','<br>')}</h1>
-          <p class="home-hero-sub">Find your sport. Join a game. Book a pitch.</p>
-          <div class="home-hero-stats">
-            <div class="home-hero-stat"><strong>${GAMES.length}</strong><span>Games listed</span></div>
-            <div class="home-hero-stat-div"></div>
-            <div class="home-hero-stat"><strong>${VENUES.length}</strong><span>Venues</span></div>
-            <div class="home-hero-stat-div"></div>
-            <div class="home-hero-stat"><strong>${GAMES.filter(g=>g.slotsLeft>0).length}</strong><span>Spots open</span></div>
-          </div>
-        </div>
-        <div class="home-hero-actions">
-          <button class="btn home-btn-primary" onclick="navigateTo('play')"><i class="fas fa-users"></i> Find a Game</button>
-          <button class="btn home-btn-outline" onclick="navigateTo('book')"><i class="fas fa-map-marked-alt"></i> Book a Venue</button>
+      <!-- Search strip -->
+      <div class="playo-search-strip">
+        <div class="playo-search-bar">
+          <i class="fas fa-search"></i>
+          <input class="playo-search-input" id="home-search" placeholder="Search venues, sports, or games…" autocomplete="off">
         </div>
       </div>
 
-      <div class="home-section-row">
-        <h2 class="home-section-title">Explore by Sport</h2>
-        <button class="home-link-btn" onclick="navigateTo('play')">All games <i class="fas fa-arrow-right"></i></button>
+      <!-- Sport tiles -->
+      <div class="playo-section">
+        <div class="playo-section-header">
+          <h2>Browse by Sport</h2>
+          <button class="playo-see-all" onclick="navigateTo('play')">See all <i class="fas fa-chevron-right" style="font-size:0.65rem"></i></button>
+        </div>
+        <div class="playo-sport-grid">
+          ${Object.entries(SPORT_ICONS).map(([name, s]) => {
+            const count = sportCounts[name] || 0;
+            return `
+              <div class="playo-sport-tile"
+                   style="background:linear-gradient(145deg,${s.bg},${s.dark})"
+                   onclick="navigateToSport('${name}')">
+                ${count > 0 ? `<span class="playo-sport-badge">${count}</span>` : ''}
+                <span class="playo-sport-emoji">${s.emoji}</span>
+                <span class="playo-sport-name">${name}</span>
+              </div>`;
+          }).join('')}
+        </div>
       </div>
 
-      <div class="sport-tiles-grid">
-        ${sportDefs.map(s => {
-          const count = sportCounts[s.name] || 0;
-          return `<div class="sport-tile-v2" style="background:linear-gradient(145deg,${s.c1},${s.c2})" onclick="navigateToSport('${s.name}')">
-            <span class="sport-tile-icon">${s.icon}</span>
-            <span class="sport-tile-name">${s.name}</span>
-            <span class="sport-tile-count">${count > 0 ? count + ' game' + (count !== 1 ? 's' : '') : 'Coming soon'}</span>
-          </div>`;
-        }).join('')}
+      <!-- Featured Venues -->
+      <div class="playo-section">
+        <div class="playo-section-header">
+          <h2>Popular Venues</h2>
+          <button class="playo-see-all" onclick="navigateTo('book')">See all <i class="fas fa-chevron-right" style="font-size:0.65rem"></i></button>
+        </div>
+        ${featuredVenues.length > 0
+          ? `<div class="playo-venues-grid">${featuredVenues.map(renderVenueCard).join('')}</div>`
+          : `<div class="playo-empty">No venues yet — check back soon.</div>`}
       </div>
 
-      <div class="home-bottom-grid">
-        <div class="home-games-col">
-          <div class="home-section-row" style="margin-bottom:16px">
-            <h2 class="home-section-title">Playing Soon</h2>
-            <button class="home-link-btn" onclick="navigateTo('play')">View all <i class="fas fa-arrow-right"></i></button>
-          </div>
-          ${liveGames.length > 0 ? `
-            <div class="home-games-stack">
-              ${liveGames.map(g => renderCompactGameCard(g)).join('')}
-            </div>
-          ` : `
-            <div class="home-empty-state">
-              <div style="font-size:3rem;margin-bottom:12px">🏟️</div>
-              <p style="color:var(--text-muted);margin-bottom:16px">No games yet — be the first to host one.</p>
-              <button class="btn btn-primary" onclick="showCreateGameModal()"><i class="fas fa-plus"></i> Host a Game</button>
-            </div>
-          `}
+      <!-- Games -->
+      <div class="playo-section">
+        <div class="playo-section-header">
+          <h2>Games Near You</h2>
+          <button class="playo-see-all" onclick="navigateTo('play')">See all <i class="fas fa-chevron-right" style="font-size:0.65rem"></i></button>
         </div>
+        ${liveGames.length > 0
+          ? `<div class="playo-games-list">${liveGames.map(renderPlayoGameRow).join('')}</div>`
+          : `<div class="playo-empty">No open games right now.<br><button class="btn btn-primary" style="margin-top:12px" onclick="showCreateGameModal()"><i class="fas fa-plus"></i> Host a Game</button></div>`}
+      </div>
 
-        <div class="home-sidebar-col">
-          <div class="home-host-cta" id="bento-cta-host">
-            <div class="home-host-icon">🎯</div>
-            <h3>Can't find what<br>you're looking for?</h3>
-            <p>Host your own game and fill it with players from the community.</p>
-            <button class="home-cta-btn">Host a Game</button>
-          </div>
-          ${featuredVenue ? `
-            <div class="home-venue-card" onclick="openBooking('${featuredVenue.id}')" style="cursor:pointer">
-              <div class="home-venue-img">
-                <img src="${featuredVenue.imageURL || featuredVenue.img || 'https://images.unsplash.com/photo-1579952363873-27f3bade9f55?auto=format&fit=crop&q=80&w=600'}" alt="${featuredVenue.name}" loading="lazy">
-                <span class="venue-card-badge">${(featuredVenue.sportType || featuredVenue.sport || '').toUpperCase()}</span>
-              </div>
-              <div class="home-venue-body">
-                <div>
-                  <h4>${featuredVenue.name}</h4>
-                  <p>${featuredVenue.area || 'Belfast'}</p>
-                </div>
-                <span class="home-venue-price">${featuredVenue.price ? '£' + featuredVenue.price + '/hr' : 'View'}</span>
-              </div>
-            </div>
-          ` : ''}
+      <!-- Host CTA -->
+      <div class="playo-host-banner" id="bento-cta-host">
+        <span class="playo-host-icon">🏟️</span>
+        <div class="playo-host-content">
+          <h3>Can't find what you're looking for?</h3>
+          <p>Host your own game and find players from the community.</p>
         </div>
+        <button class="playo-host-cta">Host a Game</button>
       </div>
 
     </div>
   `;
 }
 
-function renderCompactGameCard(g) {
+function renderPlayoGameRow(g) {
   const isFull = g.slotsLeft === 0;
   const hasJoined = currentUser && g.players && g.players.includes(currentUser.uid);
-  const total = (g.totalSpots || 10);
-  const filled = total - (g.slotsLeft || 0);
-  const fillPct = Math.round((filled / total) * 100);
+  const sportInfo = SPORT_ICONS[g.sport] || { emoji: '🏅', bg: '#455A64', dark: '#263238' };
 
   return `
-    <div class="compact-game-card">
-      <div class="compact-game-main">
-        <div class="compact-game-top">
-          <span class="game-sport-badge">${g.sport}</span>
-          <span class="compact-game-fee">${g.fee ? '£' + g.fee : 'Free'}</span>
-        </div>
-        <h4 class="compact-game-title">${g.title}</h4>
-        <div class="compact-game-meta">
+    <div class="playo-game-row">
+      <div class="playo-game-sport-icon" style="background:linear-gradient(135deg,${sportInfo.bg},${sportInfo.dark})">
+        ${sportInfo.emoji}
+      </div>
+      <div class="playo-game-info">
+        <div class="playo-game-title">${g.title}</div>
+        <div class="playo-game-meta">
           <span><i class="fas fa-map-marker-alt"></i>${g.venue}</span>
           <span><i class="fas fa-clock"></i>${formatDate(g.date)} · ${g.time}</span>
         </div>
-        <div class="compact-game-bar">
-          <div class="compact-game-fill" style="width:${fillPct}%"></div>
-        </div>
-        <div class="compact-game-slots">${filled}/${total} players · ${isFull ? 'Waitlist open' : g.slotsLeft + ' spots left'}</div>
       </div>
-      <div class="compact-game-action">
+      <div class="playo-game-right">
+        <span class="playo-game-fee">${g.fee ? '£' + g.fee : 'Free'}</span>
+        <span class="playo-game-slots ${isFull ? 'full' : ''}">${isFull ? 'Waitlist' : g.slotsLeft + ' left'}</span>
         ${hasJoined
-          ? `<button class="btn btn-outline compact-action-btn btn-leave" data-id="${g.id}"><i class="fas fa-sign-out-alt"></i> Leave</button>`
-          : `<button class="btn ${isFull ? 'btn-outline reserve' : 'btn-primary'} compact-action-btn btn-join" data-id="${g.id}">${isFull ? 'Reserve' : 'Join'}</button>`
-        }
+          ? `<button class="btn btn-leave-match btn-leave" data-id="${g.id}" style="padding:6px 12px;font-size:0.75rem;border-radius:20px">Leave</button>`
+          : isFull
+            ? `<button class="playo-reserve-btn btn-join reserve" data-id="${g.id}">Reserve</button>`
+            : `<button class="playo-join-btn btn-join" data-id="${g.id}">Join</button>`}
       </div>
     </div>
   `;
@@ -381,8 +351,9 @@ function renderPlay() {
       <div class="section-header">
         <div class="section-header-text">
           <h2>Matches</h2>
-          <p>Join a community game or hit the <strong>+</strong> to host one.</p>
+          <p>Join community games or create your own match.</p>
         </div>
+        <button class="btn btn-primary" id="create-game-btn"><i class="fas fa-plus"></i> Host Game</button>
       </div>
       <div class="sports-scroll">${renderSportsChips(selectedSport)}</div>
       <div class="filter-bar">
@@ -806,8 +777,9 @@ function bindPageEvents() {
       selectedSport = clickedSport;
       if (currentPage === 'home') {
         currentPage = 'play';
-        $$('.nav-link').forEach(l => l.classList.toggle('active', l.dataset.page === 'play'));
-        window.scrollTo({top:0,behavior:'smooth'});
+        $$('.bnav-item').forEach(l => l.classList.toggle('active', l.dataset.page === 'play'));
+        const content = $('#app-content');
+        if (content) content.scrollTop = 0;
       }
       refreshCurrentPage();
     });
@@ -1004,61 +976,70 @@ function bindPageEvents() {
   if (emptyCreateBtn) emptyCreateBtn.addEventListener('click', () => showCreateGameModal());
 }
 
+window.navigateToSport = function(sport) {
+  selectedSport = sport || 'All';
+  navigateTo('play');
+};
+
+function initDashboardComponents() {
+  $('#bento-cta-host')?.addEventListener('click', () => showCreateGameModal());
+
+  const homeSearch = $('#home-search');
+  if (homeSearch) {
+    homeSearch.addEventListener('input', (e) => {
+      const term = e.target.value.toLowerCase().trim();
+      if (!term) return;
+      // Navigate to relevant page and filter
+      if (currentPage !== 'book' && currentPage !== 'play') navigateTo('book');
+    });
+    homeSearch.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        const term = homeSearch.value.toLowerCase().trim();
+        if (term) navigateTo('book');
+      }
+    });
+  }
+}
+
 // ── Init ──
 document.addEventListener('DOMContentLoaded', () => {
   navigateTo('home');
 
-  // Bottom nav
   $$('.bnav-item').forEach(l => {
     l.addEventListener('click', () => navigateTo(l.dataset.page));
   });
 
-  // FAB
   $('#header-create-btn')?.addEventListener('click', () => showCreateGameModal());
-
-  // Auth buttons
   $('#btn-login').addEventListener('click', () => openAuth('login'));
   $('#btn-signup').addEventListener('click', () => openAuth('signup'));
 
-  // Auth tabs
   $$('.auth-tab').forEach(t => {
     t.addEventListener('click', () => openAuth(t.dataset.tab));
   });
 
-  // Modal close
   $('#modal-close').addEventListener('click', () => $('#auth-modal').classList.remove('open'));
   $('#booking-close').addEventListener('click', () => $('#booking-modal').classList.remove('open'));
   $$('.modal-overlay').forEach(m => {
-    m.addEventListener('click', (e) => { if(e.target===m) m.classList.remove('open'); });
+    m.addEventListener('click', (e) => { if (e.target === m) m.classList.remove('open'); });
   });
 
-  // Forms
-  $('#login-form').addEventListener('submit', async (e) => { 
-    e.preventDefault(); 
-    const email = $('#login-email').value;
-    const password = $('#login-password').value;
+  $('#login-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      $('#auth-modal').classList.remove('open'); 
-      toast('Welcome back! 👋'); 
-    } catch (error) {
-      toast('Login failed: ' + error.message, 'error');
-    }
+      await signInWithEmailAndPassword(auth, $('#login-email').value, $('#login-password').value);
+      $('#auth-modal').classList.remove('open');
+      toast('Welcome back! 👋');
+    } catch (err) { toast('Login failed: ' + err.message, 'error'); }
   });
 
-  $('#signup-form').addEventListener('submit', async (e) => { 
-    e.preventDefault(); 
-    const name = $('#signup-name').value;
-    const email = $('#signup-email').value;
-    const password = $('#signup-password').value;
+  $('#signup-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      await updateProfile(userCredential.user, { displayName: name });
-      $('#auth-modal').classList.remove('open'); 
-      toast('Account created! Welcome to GameNI 🎉'); 
-    } catch (error) {
-      toast('Signup failed: ' + error.message, 'error');
-    }
+      const cred = await createUserWithEmailAndPassword(auth, $('#signup-email').value, $('#signup-password').value);
+      await updateProfile(cred.user, { displayName: $('#signup-name').value });
+      $('#auth-modal').classList.remove('open');
+      toast('Welcome to GameNI! 🎉');
+    } catch (err) { toast('Signup failed: ' + err.message, 'error'); }
   });
 
   $('#google-login').addEventListener('click', async () => {
@@ -1066,18 +1047,12 @@ document.addEventListener('DOMContentLoaded', () => {
       await signInWithPopup(auth, provider);
       $('#auth-modal').classList.remove('open');
       toast('Logged in with Google!');
-    } catch (error) {
-      toast('Google login failed: ' + error.message, 'error');
-    }
+    } catch (err) { toast('Google login failed: ' + err.message, 'error'); }
   });
 
   $('#btn-logout').addEventListener('click', async () => {
-    try {
-      await signOut(auth);
-      toast('Logged out successfully.');
-    } catch (error) {
-      toast('Logout error: ' + error.message, 'error');
-    }
+    try { await signOut(auth); toast('Logged out.'); }
+    catch (err) { toast('Logout error: ' + err.message, 'error'); }
   });
 
   onAuthStateChanged(auth, (user) => {
@@ -1096,22 +1071,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // City selector
   $('#city-select').addEventListener('change', (e) => {
     selectedCity = e.target.value;
     refreshCurrentPage();
   });
 
-  // Logo
   $('#nav-logo')?.addEventListener('click', () => navigateTo('home'));
 });
-
-window.navigateToSport = function(sport) {
-  selectedSport = sport || 'All';
-  navigateTo('play');
-};
-
-function initDashboardComponents() {
-  $('#bento-cta-host')?.addEventListener('click', () => showCreateGameModal());
-}
 
