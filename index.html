@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="GameNI - Belfast's Sports Matchmaking Platform" />
+  <title>GameNI – Book Venues & Find Players</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  
+  <div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <a href="#" class="logo" id="nav-logo">
+          <div class="logo-icon"><i class="fas fa-bolt"></i></div>
+          <span>GameNI</span>
+        </a>
+        <button class="hamburger" id="nav-hamburger" aria-label="Toggle menu">
+          <i class="fas fa-bars"></i>
+        </button>
+      </div>
+      
+      <div class="sidebar-menu">
+        <p class="menu-label">Main Menu</p>
+        <a href="#" class="nav-link active" data-page="home">
+          <i class="fas fa-home"></i> <span>Dashboard</span>
+        </a>
+        <a href="#" class="nav-link" data-page="book">
+          <i class="fas fa-map-marked-alt"></i> <span>Venues</span>
+        </a>
+        <a href="#" class="nav-link" data-page="play">
+          <i class="fas fa-users"></i> <span>Matches</span>
+        </a>
+        <a href="#" class="nav-link" data-page="history">
+          <i class="fas fa-history"></i> <span>History</span>
+        </a>
+      </div>
+      
+      <div class="sidebar-footer">
+        <div class="city-selector" id="city-selector">
+          <i class="fas fa-map-marker-alt"></i>
+          <select id="city-select">
+            <option value="belfast">Belfast</option>
+            <option value="derry" disabled>Derry</option>
+          </select>
+        </div>
+        
+        <div id="auth-controls-container">
+          <div id="unauth-controls">
+            <button class="btn btn-outline btn-full" id="btn-login" style="margin-bottom: 8px;">Log In</button>
+            <button class="btn btn-primary btn-full" id="btn-signup">Sign Up</button>
+          </div>
+          <div id="auth-controls" class="hidden user-profile-card">
+            <div class="user-avatar" id="user-avatar-initials">U</div>
+            <div class="user-info">
+              <span id="user-display-name">User Name</span>
+              <span class="user-role">Player</span>
+            </div>
+            <button class="btn-icon" id="btn-logout" aria-label="Log Out"><i class="fas fa-sign-out-alt"></i></button>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="main-wrapper">
+      <header class="top-header">
+        <div class="header-search">
+          <i class="fas fa-search"></i>
+          <input type="text" placeholder="Search venues, sports, or games..." id="global-search">
+        </div>
+        <div class="header-actions">
+          <button class="btn-icon"><i class="far fa-bell"></i></button>
+          <button class="btn btn-primary" id="header-create-btn"><i class="fas fa-plus"></i> Host Game</button>
+        </div>
+      </header>
+
+      <main id="app-content" class="content-area"></main>
+    </div>
+  </div>
+
+  <!-- Auth Modal -->
+  <div class="modal-overlay" id="auth-modal">
+    <div class="modal" id="auth-modal-content">
+      <button class="modal-close" id="modal-close"><i class="fas fa-times"></i></button>
+      <div class="modal-body">
+        <div class="auth-tabs">
+          <button class="auth-tab active" data-tab="login" id="tab-login">Log In</button>
+          <button class="auth-tab" data-tab="signup" id="tab-signup">Sign Up</button>
+        </div>
+        <form class="auth-form" id="login-form">
+          <div class="form-group">
+            <label for="login-email">Email</label>
+            <input type="email" id="login-email" placeholder="Enter your email" required>
+          </div>
+          <div class="form-group">
+            <label for="login-password">Password</label>
+            <input type="password" id="login-password" placeholder="Enter your password" required>
+          </div>
+          <button type="submit" class="btn btn-primary btn-full" id="login-submit">Log In</button>
+          <div class="auth-divider"><span>or continue with</span></div>
+          <button type="button" class="btn btn-social" id="google-login"><i class="fab fa-google"></i> Google</button>
+        </form>
+        <form class="auth-form hidden" id="signup-form">
+          <div class="form-group">
+            <label for="signup-name">Full Name</label>
+            <input type="text" id="signup-name" placeholder="Enter your name" required>
+          </div>
+          <div class="form-group">
+            <label for="signup-email">Email</label>
+            <input type="email" id="signup-email" placeholder="Enter your email" required>
+          </div>
+          <div class="form-group">
+            <label for="signup-password">Password</label>
+            <input type="password" id="signup-password" placeholder="Create a password" required>
+          </div>
+          <button type="submit" class="btn btn-primary btn-full" id="signup-submit">Create Account</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Booking Modal -->
+  <div class="modal-overlay" id="booking-modal">
+    <div class="modal modal-lg">
+      <button class="modal-close" id="booking-close"><i class="fas fa-times"></i></button>
+      <div class="modal-body" id="booking-body"></div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script type="module" src="/main.js"></script>
+</body>
+</html>
