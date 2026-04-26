@@ -14,7 +14,7 @@ GameNI is not a booking app. It is a **trust engine** that converts "playing wit
 Adults in Belfast who want to play sport face a paradox. Supply exists — there are pitches, courts, and pools across the city. Demand exists — thousands of people own gear they never use. But the **transaction cost of trust** kills the market. Showing up alone feels awkward. Committing to a league feels rigid. Organizing a group is thankless. Every existing format — leagues, WhatsApp groups, public park pick-ups — forces a binary choice between **total commitment** and **total chaos**. There is nothing in between.
 
 ## The Solution
-Pitch fills the diagonal: **Low Barrier + Medium Retention + Medium Social Density**. We do this through three core innovations:
+GameNI fills the diagonal: **Low Barrier + Medium Retention + Medium Social Density**. We do this through three core innovations:
 
 1. **The Lurk Layer:** Users can watch, signal interest, and sub-in without publicly committing. This is how 80% of real-world community formation actually works.
 2. **Organizer-as-a-Service:** We treat the person who books the court and chases the money as our most valuable user. We pay them, give them tools, and give them status.

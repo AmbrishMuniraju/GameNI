@@ -1,6 +1,6 @@
 # 10 — Hackathon Wireframe Prompts
 
-A copy-paste prompt library for generating the **Pitch** prototype wireframes in **Google Stitch** and **Claude design**.
+A copy-paste prompt library for generating the **GameNI** prototype wireframes in **Google Stitch** and **Claude design**.
 
 ---
 
@@ -33,7 +33,7 @@ These constraints apply to every screen. They are baked into the Shared Preamble
 ## 🎨 SHARED PREAMBLE (Prepend To Every Prompt)
 
 ```
-You are designing a screen for "Pitch" — a sports booking and community 
+You are designing a screen for "GameNI" — a sports booking and community 
 matchmaking web app for Belfast. The product helps adults book pitches and 
 join games of FOOTBALL and CRICKET only. Other sports (Badminton, Swimming, 
 Tennis, Basketball, Padel, GAA) appear as disabled "Coming Soon" chips.
@@ -94,7 +94,7 @@ live games, real venues, and the sense that "Belfast is already playing."
 LAYOUT (top to bottom):
 
 1. GLASSMORPHIC NAVBAR (sticky)
-   - Left: "PITCH" wordmark in Lexend Black
+   - Left: "GAMENI" wordmark in Lexend Black
    - Center: nav links — Book, Play, Profile
    - Right: city selector dropdown showing "Belfast" with a small green dot, 
      plus "Log In" ghost button and "Sign Up" primary gradient button
@@ -136,7 +136,7 @@ LAYOUT (top to bottom):
    - Each card has dual CTAs: a small "WATCH" outline button and a "JOIN" 
      gradient button
 
-6. "HOW PITCH WORKS" SECTION
+6. "HOW GAMENI WORKS" SECTION
    - 3 columns with numbered icons:
      01. WATCH — Browse games. No commitment.
      02. JOIN — One-tap into any game.
@@ -145,7 +145,7 @@ LAYOUT (top to bottom):
 7. FOOTER
    - Coming Soon cities row: "Coming to Derry, Lisburn, Antrim, Newry, 
      Dublin." Each city as a disabled pill.
-   - Email capture: "Want Pitch in your city? Drop your email."
+   - Email capture: "Want GameNI in your city? Drop your email."
 
 VISUAL EMPHASIS: 
 - The hero must feel cinematic, not corporate
@@ -377,7 +377,7 @@ LAYOUT (top to bottom):
    - Hover/click on a card highlights its pin
 
 5. BOTTOM CTA STRIP
-   "Run a venue in Belfast? List your slots on Pitch and we'll fill them."
+   "Run a venue in Belfast? List your slots on GameNI and we'll fill them."
    With a "PARTNER WITH US" outline button.
 
 VISUAL EMPHASIS:
@@ -521,7 +521,7 @@ CONTENT (top to bottom):
 6. CONVERSION CTA card (the key thing)
    Background: subtle linear gradient using primary colors at low opacity
    Heading: "OPEN THIS UP TO OTHER PLAYERS?"
-   Body: "Create a Pitch game from this booking. Set a per-player fee 
+   Body: "Create a GameNI game from this booking. Set a per-player fee 
    and let other players join. The pitch could pay for itself."
    Two buttons:
    - Primary gradient: "CREATE A GAME →"
@@ -666,7 +666,7 @@ CONTENT (top to bottom):
    (Note the copy — it ties the action to the original intent)
 
 9. SWITCH MODE LINK (bottom, small)
-   "Already on Pitch? Log in →" (muted, with gradient arrow)
+   "Already on GameNI? Log in →" (muted, with gradient arrow)
 
 VISUAL EMPHASIS:
 - The context banner at the top is critical — it tells the user WHY 
@@ -695,7 +695,7 @@ VISUAL EMPHASIS:
 ### Things To Generate Assets For Separately
 
 These are not screens but you'll need them as image assets:
-- **PITCH wordmark** (use Lexend Black, all caps, with a tiny gradient dot for the "I" tittle)
+- **GAMENI wordmark** (use Lexend Black, all caps, with a tiny gradient dot for the "I" tittle)
 - **Sport icons** (use Phosphor or Lucide for football, cricket — make them line-style, weight 2)
 - **Trusted Host badge** (small gradient checkmark in a circle)
 
@@ -718,7 +718,7 @@ Once the wireframes are approved, paste them into Claude with this prompt to con
 
 ```
 Convert this wireframe into a single-file React component using 
-Tailwind utility classes. Use the design tokens from the Pitch 
+Tailwind utility classes. Use the design tokens from the GameNI 
 design system. Make all interactive elements functional with mock 
 state (useState). The output should be a self-contained .jsx file 
 I can paste into a Vite React app.

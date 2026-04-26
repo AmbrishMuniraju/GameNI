@@ -50,7 +50,7 @@ erDiagram
         json amenities "array of strings"
         string contact_phone
         string contact_email
-        boolean is_partner "venue has partnership with Pitch"
+        boolean is_partner "venue has partnership with GameNI"
         timestamp created_at
     }
 

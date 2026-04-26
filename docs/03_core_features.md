@@ -165,7 +165,7 @@ A Host can create a recurring game (e.g., "Every Tuesday 7 PM at Avoniel"). The 
 Self-organising tournaments with bracket generation, scoring, and leaderboards. Opt-in — never forced.
 
 ### F14. Venue Partner Dashboard
-A B2B portal for venue operators to manage availability, pricing, and view analytics on bookings driven through Pitch.
+A B2B portal for venue operators to manage availability, pricing, and view analytics on bookings driven through GameNI.
 
 ### F15. In-App Payments (Stripe / Monzo Integration)
 Full payment flow — pay when you join, auto-refund on cancellation, auto-split for group bookings. Replaces external Venmo/Monzo chasing.

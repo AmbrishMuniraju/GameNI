@@ -14,8 +14,8 @@ This is the most critical and complex workflow in the system. It is the engine t
 sequenceDiagram
     participant P as Player (Cancelling)
     participant API as Game Service
-    participant DB as PostgreSQL
-    participant Q as BullMQ Queue
+    participant DB as Firestore
+    participant Q as Cloud Tasks
     participant R as Reserve #1
     participant N as Notification Service
 
@@ -25,7 +25,7 @@ sequenceDiagram
     API->>DB: Query RESERVE where game_id AND status='waiting' ORDER BY queue_position LIMIT 1
     DB-->>API: Reserve #1 found
     API->>DB: Update RESERVE #1 status → 'notified', set notified_at
-    API->>Q: Enqueue 'expire-reserve' job with 30min delay
+    API->>Q: Enqueue 'expireReserve' task with 30min delay
     API->>N: Send push notification to Reserve #1
     N->>R: "A spot opened in Friendly 5-a-side! Accept within 30 min."
     
@@ -34,7 +34,7 @@ sequenceDiagram
         API->>DB: Update RESERVE status → 'accepted'
         API->>DB: Create GAME_PARTICIPANT (join_method: 'reserve_promoted')
         API->>DB: GAME.current_players += 1
-        API->>Q: Cancel 'expire-reserve' job
+        API->>Q: Cancel 'expireReserve' task
     else Reserve Declines or Timer Expires
         Q->>API: 'expire-reserve' job fires
         API->>DB: Update RESERVE status → 'expired'
@@ -49,7 +49,7 @@ sequenceDiagram
 |---|---|---|
 | 1.1 | Add `cancel` endpoint to Game Service | Player can cancel; `current_players` decrements |
 | 1.2 | Add Reserve query logic | Finds first `waiting` reserve by `queue_position` |
-| 1.3 | Integrate BullMQ job for 30min timer | Job fires after 30 minutes |
+| 1.3 | Integrate Cloud Tasks timer for 30min window | Task fires after 30 minutes |
 | 1.4 | Add notification trigger | Push notification sent to reserve's device |
 | 1.5 | Add `accept` endpoint for reserves | Reserve becomes a participant; job cancelled |
 | 1.6 | Add `expire` handler | Expired reserve triggers next-in-queue |
@@ -187,7 +187,7 @@ The recommended build order based on dependencies and user impact:
 
 ```mermaid
 gantt
-    title Pitch MVP Development Timeline
+    title GameNI MVP Development Timeline
     dateFormat  YYYY-MM-DD
     section Foundation
     Auth + User Profiles       :a1, 2026-05-01, 14d

@@ -40,7 +40,7 @@ Most platforms only solve #2 (skill matching) and assume the rest follows. They 
 
 ---
 
-## The Solution: Pitch
+## The Solution: GameNI
 
 ### Core Thesis
 > The winning platform won't optimize for *transactional liquidity* (matching supply to demand at time T). It will optimize for **psychological liquidity** — lowering the cost of trying, the cost of flaking, and the cost of leading.
@@ -48,7 +48,7 @@ Most platforms only solve #2 (skill matching) and assume the rest follows. They 
 ### Three Strategic Pillars
 
 #### Pillar 1: Graduated Commitment
-Instead of forcing a binary (commit publicly or don't exist), Pitch offers a funnel:
+Instead of forcing a binary (commit publicly or don't exist), GameNI offers a funnel:
 ```
 Lurk → Watch → Signal Interest → Sub-In → Join → Become a Regular → Host
 ```

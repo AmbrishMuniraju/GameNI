@@ -147,7 +147,7 @@ flowchart TD
 
 | Week | Action | Emotion | Platform State |
 |---|---|---|---|
-| 1 | Finds Pitch via Instagram ad. Browses games. | Curious but cautious. | Guest |
+| 1 | Finds GameNI via Instagram ad. Browses games. | Curious but cautious. | Guest |
 | 1 | Watches 3 football games. | Low commitment, feels safe. | Watcher |
 | 2 | Gets notification: "Slot opened in Friendly 5-a-side!" | Excited but nervous. | Watcher |
 | 2 | Joins as Sub-in. Uses game chat to say hi. | Relieved to have context. | Player |

@@ -67,7 +67,7 @@ Most platforms launch citywide and stay shallow. We will **monopolize a single c
 - She doesn't want a one-time match — she wants **a Tuesday**. She is shopping for **ritual**, not recreation
 - She suspects her body has aged faster than her self-image, and dreads finding out in front of strangers
 
-**What Pitch Does For Her:**
+**What GameNI Does For Her:**
 - The Lurk Layer lets her browse and watch before committing
 - "Soft Arrival" chat lets her message the group before showing up
 - She sees the host's rating and the skill level — reducing the unknown
@@ -88,7 +88,7 @@ Most platforms launch citywide and stay shallow. We will **monopolize a single c
 - He is willing to pay a significant premium for commitment-free reliability
 - He secretly worries that if he stops playing entirely, a part of his identity will quietly die
 
-**What Pitch Does For Him:**
+**What GameNI Does For Him:**
 - No commitment required — browse games, join 4 hours before, or sub-in when someone drops
 - "Join as Reserve" means he can signal intent without the guilt of flaking
 - No-shame cancellation — his spot is auto-filled, no drama
@@ -110,7 +110,7 @@ Most platforms launch citywide and stay shallow. We will **monopolize a single c
 - She resents being cast as the "mum" of a group of adults
 - She would pay £20/month to never chase money again; she would pay £200/month to outsource leadership without losing status
 
-**What Pitch Does For Her:**
+**What GameNI Does For Her:**
 - Auto-payment splitting (everyone pays before the game, no chasing)
 - Waitlist management (reserves auto-fill if someone drops)
 - "Trusted Host" badge and public profile — her status is preserved and amplified
