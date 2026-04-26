@@ -54,11 +54,10 @@ input, select { font-family: inherit; }
   background: var(--primary);
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 0 16px;
+  padding: 0 28px;
   flex-shrink: 0;
   z-index: 100;
-  gap: 12px;
+  gap: 8px;
 }
 
 .top-nav-brand {
@@ -113,7 +112,56 @@ input, select { font-family: inherit; }
 }
 .city-select option { background: #E64A19; }
 
-.top-nav-right { flex-shrink: 0; }
+/* Desktop nav links */
+.top-nav-links {
+  display: flex;
+  gap: 2px;
+  flex: 1;
+  margin-left: 8px;
+}
+
+.nav-top-link {
+  color: rgba(255,255,255,0.72);
+  font-size: 0.88rem;
+  font-weight: 600;
+  padding: 7px 14px;
+  border-radius: 7px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-family: var(--font-family);
+  transition: color 0.15s, background 0.15s;
+  white-space: nowrap;
+}
+.nav-top-link:hover { color: white; background: rgba(255,255,255,0.12); }
+.nav-top-link.active { color: white; background: rgba(0,0,0,0.15); font-weight: 700; }
+
+/* Host Game button */
+.btn-host-nav {
+  background: white;
+  color: var(--primary);
+  border: none;
+  border-radius: 7px;
+  padding: 8px 16px;
+  font-size: 0.83rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: var(--font-family);
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: opacity 0.15s;
+  margin-right: 6px;
+}
+.btn-host-nav:hover { opacity: 0.9; }
+
+.top-nav-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
 .nav-auth-row { display: flex; align-items: center; gap: 6px; }
 
 .btn-ghost-nav {
@@ -179,65 +227,36 @@ input, select { font-family: inherit; }
 /* ── Content Area ── */
 .content-area {
   flex: 1;
-  padding: 0;
   overflow-y: auto;
   scroll-behavior: smooth;
+  background: var(--bg-app);
 }
 
-/* ── Bottom Nav ── */
-.bottom-nav {
-  height: var(--bottom-nav-h);
-  background: white;
-  border-top: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  padding: 0 4px;
-  flex-shrink: 0;
-  box-shadow: 0 -2px 12px rgba(0,0,0,0.06);
+/* ── Page Container ── */
+.page-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 28px 40px 56px;
 }
 
-.bnav-item {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
+/* ── Back Button ── */
+.back-btn {
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  gap: 3px;
-  color: #9E9E9E;
-  font-size: 0.58rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  border: none;
+  gap: 8px;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  font-weight: 600;
   background: none;
+  border: none;
   cursor: pointer;
   font-family: var(--font-family);
-  padding: 4px 2px;
-  border-radius: 8px;
+  padding: 6px 0;
+  margin-bottom: 20px;
   transition: color 0.15s;
 }
-
-.bnav-item i { font-size: 1.1rem; }
-.bnav-item.active { color: var(--primary); }
-
-.bnav-fab {
-  width: 48px; height: 48px;
-  border-radius: 50%;
-  background: var(--primary);
-  color: white;
-  border: 3px solid var(--bg-app);
-  box-shadow: 0 4px 16px rgba(255,87,34,0.45);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 1.2rem;
-  cursor: pointer;
-  flex-shrink: 0;
-  margin: 0 2px;
-  position: relative;
-  bottom: 6px;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-.bnav-fab:hover { transform: scale(1.08); box-shadow: 0 6px 20px rgba(255,87,34,0.55); }
-.bnav-fab:active { transform: scale(0.94); }
+.back-btn:hover { color: var(--text-main); }
+.back-btn i { font-size: 0.88rem; }
 
 /* ── Buttons ── */
 .btn {
@@ -928,11 +947,16 @@ input, select { font-family: inherit; }
 .booking-row span:last-child { color: var(--text-main); font-weight: 500; }
 .booking-total { display: flex; justify-content: space-between; margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--border); font-weight: 700; font-size: 1.1rem; }
 
-@media (max-width: 600px) {
-  .top-nav { padding: 0 12px; }
-  .top-nav-city { display: none; }
-  .cards-grid { grid-template-columns: 1fr; }
-  .playo-venues-grid { grid-template-columns: 1fr; }
+@media (max-width: 900px) {
+  .top-nav-links { display: none; }
+  .top-nav { padding: 0 16px; }
+  .page-container { padding: 16px 16px 40px; }
+  .home-search-hero { padding: 28px 16px 32px; }
+  .home-hero-title { font-size: 1.8rem; }
+  .playo-sport-grid { grid-template-columns: repeat(3, 1fr); }
+  .playo-section { margin: 20px 0; }
+  .cards-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+  .playo-venues-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
 }
 
 /* ── NEW BENTO DASHBOARD ── */
@@ -1633,41 +1657,73 @@ input, select { font-family: inherit; }
 
 .playo-home { display: flex; flex-direction: column; }
 
-/* Search strip (full-width orange) */
-.playo-search-strip {
-  background: var(--primary);
-  padding: 12px 16px 16px;
+/* Hero search (desktop — full-width orange banner) */
+.home-search-hero {
+  background: linear-gradient(135deg, var(--primary) 0%, #FF7043 100%);
+  padding: 44px 40px 48px;
 }
 
-.playo-search-bar {
-  background: white;
-  border-radius: 10px;
+.home-search-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.home-hero-title {
+  font-size: 2.4rem;
+  font-weight: 800;
+  color: white;
+  line-height: 1.1;
+  margin-bottom: 8px;
+  letter-spacing: -0.5px;
+}
+
+.home-hero-sub {
+  color: rgba(255,255,255,0.8);
+  font-size: 1rem;
+  margin-bottom: 24px;
+}
+
+.home-search-bar {
   display: flex;
   align-items: center;
-  padding: 11px 14px;
+  background: white;
+  border-radius: 10px;
+  padding: 13px 16px;
   gap: 10px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  max-width: 620px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.15);
 }
 
-.playo-search-bar i { color: var(--text-muted); font-size: 0.95rem; flex-shrink: 0; }
+.home-search-bar i { color: var(--text-muted); font-size: 1rem; flex-shrink: 0; }
 
 .playo-search-input {
+  flex: 1;
   border: none;
   outline: none;
-  width: 100%;
-  font-size: 0.9rem;
+  font-size: 0.93rem;
   font-family: var(--font-family);
   color: var(--text-main);
   background: transparent;
 }
-
 .playo-search-input::placeholder { color: var(--text-muted); }
 
-/* Page padding wrapper */
-.playo-page-pad { padding: 0 16px; }
+.home-search-find-btn {
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 7px;
+  padding: 8px 20px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: var(--font-family);
+  transition: background 0.15s;
+  white-space: nowrap;
+}
+.home-search-find-btn:hover { background: var(--primary-hover); }
 
 /* Section */
-.playo-section { margin: 20px 0; padding: 0 16px; }
+.playo-section { margin: 28px 0; }
 
 .playo-section-header {
   display: flex;
@@ -1696,11 +1752,11 @@ input, select { font-family: inherit; }
   gap: 4px;
 }
 
-/* Sport tiles 3-col grid */
+/* Sport tiles — 6-col on desktop */
 .playo-sport-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 12px;
 }
 
 .playo-sport-tile {
@@ -1889,9 +1945,7 @@ input, select { font-family: inherit; }
   border: 1.5px dashed var(--border);
 }
 
-/* Other pages inner padding */
-.section { margin-bottom: 32px; padding: 0 16px; }
+/* Other pages */
+.section { margin-bottom: 32px; }
 .section .section-header { margin-bottom: 16px; }
-.section .sports-scroll { padding-bottom: 12px; }
-.section .cards-grid { padding: 0; }
 .section .filter-bar { margin-bottom: 16px; }
