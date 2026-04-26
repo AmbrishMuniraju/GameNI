@@ -162,85 +162,141 @@ function renderGameCard(g) {
 
 // ── Pages ──
 function renderHome() {
+  const hour = new Date().getHours();
+  const greeting = hour < 12 ? 'Good Morning' : hour < 17 ? 'Good Afternoon' : 'Evening';
+  const dateStr = new Date().toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' });
+
+  const sportCounts = {};
+  GAMES.forEach(g => { if (g.sport) sportCounts[g.sport] = (sportCounts[g.sport] || 0) + 1; });
+
+  const sportDefs = [
+    { name: 'Football',   icon: '⚽', c1: '#14532d', c2: '#16a34a' },
+    { name: 'Cricket',    icon: '🏏', c1: '#7c2d12', c2: '#ea580c' },
+    { name: 'Badminton',  icon: '🏸', c1: '#0c4a6e', c2: '#0284c7' },
+    { name: 'Swimming',   icon: '🏊', c1: '#1e3a5f', c2: '#2563eb' },
+    { name: 'Padel',      icon: '🎾', c1: '#4c1d95', c2: '#7c3aed' },
+    { name: 'Pickleball', icon: '🏓', c1: '#881337', c2: '#e11d48' },
+  ];
+
+  const liveGames = GAMES.filter(g => g.slotsLeft > 0).slice(0, 4);
+  const featuredVenue = VENUES.length > 0 ? [...VENUES].sort((a,b) => (parseInt(b.reviews)||0)-(parseInt(a.reviews)||0))[0] : null;
+
   return `
-    <div class="bento-wrapper" style="padding: 24px; min-height: 100%;">
-      
-      <!-- 1. Featured Venue Carousel -->
-      <div class="bento-item bento-featured" id="bento-featured-container">
-        <div style="padding:40px; text-align:center; color:var(--text-muted);">Loading popular venues...</div>
-      </div>
+    <div class="home-v2">
 
-      <!-- 2. Host a Game CTA -->
-      <div class="bento-item bento-cta" style="cursor: pointer;" id="bento-cta-host">
-        <h2>Can't find what<br>you're looking for?</h2>
-        <button class="btn-cta">Host a game</button>
-      </div>
-
-      <!-- 3. Pills -->
-      <div class="bento-pills-container">
-        <div class="bento-pill pill-red" id="bento-pill-top-rated" style="cursor:pointer;">Top Rated Venues</div>
-        <div class="bento-pill pill-blue" id="bento-pill-instant" style="cursor:pointer;">Instant Matchmaking</div>
-      </div>
-
-      <!-- 4. Profile Card -->
-      <div class="bento-item bento-profile">
-        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=400" alt="Profile" class="bento-profile-img">
-        <div class="bento-profile-badge">
-          <div class="icon-bg"><i class="fab fa-linkedin-in"></i></div>
-          <div class="badge-text">
-            <h4>Sofia Andersson</h4>
-            <p>Community Manager</p>
+      <div class="home-hero-v2">
+        <div class="home-hero-left">
+          <div class="home-hero-eyebrow"><span class="live-dot"></span>${dateStr}</div>
+          <h1 class="home-hero-title">${greeting},<br>Belfast.</h1>
+          <p class="home-hero-sub">Find your sport. Join a game. Book a pitch.</p>
+          <div class="home-hero-stats">
+            <div class="home-hero-stat"><strong>${GAMES.length}</strong><span>Games listed</span></div>
+            <div class="home-hero-stat-div"></div>
+            <div class="home-hero-stat"><strong>${VENUES.length}</strong><span>Venues</span></div>
+            <div class="home-hero-stat-div"></div>
+            <div class="home-hero-stat"><strong>${GAMES.filter(g=>g.slotsLeft>0).length}</strong><span>Spots open</span></div>
           </div>
         </div>
+        <div class="home-hero-actions">
+          <button class="btn home-btn-primary" onclick="navigateTo('play')"><i class="fas fa-users"></i> Find a Game</button>
+          <button class="btn home-btn-outline" onclick="navigateTo('book')"><i class="fas fa-map-marked-alt"></i> Book a Venue</button>
+        </div>
       </div>
 
-      <!-- 5. Icons & Chart -->
-      <div class="bento-stats">
-        <div class="bento-icons">
-          <div class="bento-circle-icon icon-orange"><i class="fas fa-futbol"></i></div>
-          <div class="bento-circle-icon icon-green"><i class="fas fa-table-tennis"></i></div>
-          <div class="bento-circle-icon icon-blue"><i class="fas fa-basketball-ball"></i></div>
-        </div>
-        <div class="bento-chart">
-          <div class="chart-legend">
-            <span><div class="dot orange"></div> Matches played</span>
-            <span><div class="dot gray"></div> Venues booked</span>
+      <div class="home-section-row">
+        <h2 class="home-section-title">Explore by Sport</h2>
+        <button class="home-link-btn" onclick="navigateTo('play')">All games <i class="fas fa-arrow-right"></i></button>
+      </div>
+
+      <div class="sport-tiles-grid">
+        ${sportDefs.map(s => {
+          const count = sportCounts[s.name] || 0;
+          return `<div class="sport-tile-v2" style="background:linear-gradient(145deg,${s.c1},${s.c2})" onclick="navigateToSport('${s.name}')">
+            <span class="sport-tile-icon">${s.icon}</span>
+            <span class="sport-tile-name">${s.name}</span>
+            <span class="sport-tile-count">${count > 0 ? count + ' game' + (count !== 1 ? 's' : '') : 'Coming soon'}</span>
+          </div>`;
+        }).join('')}
+      </div>
+
+      <div class="home-bottom-grid">
+        <div class="home-games-col">
+          <div class="home-section-row" style="margin-bottom:16px">
+            <h2 class="home-section-title">Playing Soon</h2>
+            <button class="home-link-btn" onclick="navigateTo('play')">View all <i class="fas fa-arrow-right"></i></button>
           </div>
-          <div class="chart-bars">
-            <div class="chart-bar-group">
-              <div class="bar orange" style="height: 40px;"></div>
-              <div class="bar gray" style="height: 20px;"></div>
-              <div class="bar-label">1-3 mo</div>
+          ${liveGames.length > 0 ? `
+            <div class="home-games-stack">
+              ${liveGames.map(g => renderCompactGameCard(g)).join('')}
             </div>
-            <div class="chart-bar-group">
-              <div class="bar orange" style="height: 50px;"></div>
-              <div class="bar gray" style="height: 25px;"></div>
-              <div class="bar-label">3-6 mo</div>
+          ` : `
+            <div class="home-empty-state">
+              <div style="font-size:3rem;margin-bottom:12px">🏟️</div>
+              <p style="color:var(--text-muted);margin-bottom:16px">No games yet — be the first to host one.</p>
+              <button class="btn btn-primary" onclick="showCreateGameModal()"><i class="fas fa-plus"></i> Host a Game</button>
             </div>
-            <div class="chart-bar-group">
-              <div class="bar orange" style="height: 60px;"></div>
-              <div class="bar gray" style="height: 40px;"></div>
-              <div class="bar-label">6-9 mo</div>
-            </div>
-            <div class="chart-bar-group">
-              <div class="bar orange" style="height: 55px;"></div>
-              <div class="bar gray" style="height: 35px;"></div>
-              <div class="bar-label">9-12 mo</div>
-            </div>
+          `}
+        </div>
+
+        <div class="home-sidebar-col">
+          <div class="home-host-cta" id="bento-cta-host">
+            <div class="home-host-icon">🎯</div>
+            <h3>Can't find what<br>you're looking for?</h3>
+            <p>Host your own game and fill it with players from the community.</p>
+            <button class="home-cta-btn">Host a Game</button>
           </div>
+          ${featuredVenue ? `
+            <div class="home-venue-card" onclick="openBooking('${featuredVenue.id}')" style="cursor:pointer">
+              <div class="home-venue-img">
+                <img src="${featuredVenue.imageURL || featuredVenue.img || 'https://images.unsplash.com/photo-1579952363873-27f3bade9f55?auto=format&fit=crop&q=80&w=600'}" alt="${featuredVenue.name}" loading="lazy">
+                <span class="venue-card-badge">${(featuredVenue.sportType || featuredVenue.sport || '').toUpperCase()}</span>
+              </div>
+              <div class="home-venue-body">
+                <div>
+                  <h4>${featuredVenue.name}</h4>
+                  <p>${featuredVenue.area || 'Belfast'}</p>
+                </div>
+                <span class="home-venue-price">${featuredVenue.price ? '£' + featuredVenue.price + '/hr' : 'View'}</span>
+              </div>
+            </div>
+          ` : ''}
         </div>
       </div>
 
-      <!-- 6. Calendar Card -->
-      <div class="bento-item bento-calendar" id="bento-calendar-container" style="cursor: pointer;">
-        <div class="bento-calendar-header">
-          <h3><i class="fas fa-calendar-alt"></i> Upcoming Matches</h3>
-        </div>
-        <div class="bento-calendar-body" id="bento-calendar-list" style="margin-top: 12px; display: flex; flex-direction: column; gap: 8px;">
-          <div style="color:var(--text-muted)">Loading...</div>
-        </div>
-      </div>
+    </div>
+  `;
+}
 
+function renderCompactGameCard(g) {
+  const isFull = g.slotsLeft === 0;
+  const hasJoined = currentUser && g.players && g.players.includes(currentUser.uid);
+  const total = (g.totalSpots || 10);
+  const filled = total - (g.slotsLeft || 0);
+  const fillPct = Math.round((filled / total) * 100);
+
+  return `
+    <div class="compact-game-card">
+      <div class="compact-game-main">
+        <div class="compact-game-top">
+          <span class="game-sport-badge">${g.sport}</span>
+          <span class="compact-game-fee">${g.fee ? '£' + g.fee : 'Free'}</span>
+        </div>
+        <h4 class="compact-game-title">${g.title}</h4>
+        <div class="compact-game-meta">
+          <span><i class="fas fa-map-marker-alt"></i>${g.venue}</span>
+          <span><i class="fas fa-clock"></i>${formatDate(g.date)} · ${g.time}</span>
+        </div>
+        <div class="compact-game-bar">
+          <div class="compact-game-fill" style="width:${fillPct}%"></div>
+        </div>
+        <div class="compact-game-slots">${filled}/${total} players · ${isFull ? 'Waitlist open' : g.slotsLeft + ' spots left'}</div>
+      </div>
+      <div class="compact-game-action">
+        ${hasJoined
+          ? `<button class="btn btn-outline compact-action-btn btn-leave" data-id="${g.id}"><i class="fas fa-sign-out-alt"></i> Leave</button>`
+          : `<button class="btn ${isFull ? 'btn-outline reserve' : 'btn-primary'} compact-action-btn btn-join" data-id="${g.id}">${isFull ? 'Reserve' : 'Join'}</button>`
+        }
+      </div>
     </div>
   `;
 }
@@ -1061,128 +1117,12 @@ document.addEventListener('DOMContentLoaded', () => {
   $('#nav-logo').addEventListener('click', (e) => { e.preventDefault(); navigateTo('home'); });
 });
 
-let currentCarouselIndex = 0;
+window.navigateToSport = function(sport) {
+  selectedSport = sport || 'All';
+  navigateTo('play');
+};
+
 function initDashboardComponents() {
-  // 1. Featured Venue Carousel
-  const carouselContainer = $('#bento-featured-container');
-  if (carouselContainer && VENUES.length > 0) {
-    const popularVenues = [...VENUES].sort((a,b) => (parseInt(b.reviews) || 0) - (parseInt(a.reviews) || 0)).slice(0, 5);
-    
-    const renderCarouselSlide = () => {
-      const v = popularVenues[currentCarouselIndex];
-      const sport = (v.sportType || v.sport || '').toUpperCase();
-      const rawPrice = v.price || "";
-      let priceDisplay = /^[\d\.]+$/.test(rawPrice.trim()) ? `£ ${rawPrice}` : rawPrice;
-      if (!priceDisplay) priceDisplay = 'Contact';
-      
-      const dots = popularVenues.map((_, i) => `
-        <div style="width: 6px; height: 6px; border-radius: 50%; background: ${i === currentCarouselIndex ? '#F97316' : '#E5E7EB'}; transition: background 0.3s;"></div>
-      `).join('');
-      
-      carouselContainer.innerHTML = `
-        <div class="bento-featured-header">
-          <div class="bento-featured-title">
-            <h3>${v.name}</h3>
-            <p>${sport}</p>
-          </div>
-          <div class="bento-featured-price">
-            <p>Pricing:</p>
-            <h4>${priceDisplay}</h4>
-          </div>
-        </div>
-        <div class="bento-featured-img">
-          <div class="nav-btn prev-btn" style="position:absolute; left: 10px; z-index: 10; cursor:pointer;"><i class="fas fa-chevron-left"></i></div>
-          <img src="${v.imageURL || v.img || 'https://images.unsplash.com/photo-1579952363873-27f3bade9f55?auto=format&fit=crop&q=80&w=800'}" alt="${v.name}" style="cursor:pointer;" onclick="openBooking('${v.id}')">
-          <div class="nav-btn next-btn" style="position:absolute; right: 10px; z-index: 10; cursor:pointer;"><i class="fas fa-chevron-right"></i></div>
-          <div style="position:absolute; bottom: -15px; display:flex; gap: 6px;">
-            ${dots}
-          </div>
-        </div>
-        <div class="bento-featured-specs">
-          <div class="spec-item"><i class="fas fa-futbol"></i> ${sport}</div>
-          <div class="spec-item"><i class="fas fa-bolt"></i> Floodlights</div>
-          <div class="spec-item"><i class="fas fa-shower"></i> Changing</div>
-          <div class="spec-item"><i class="fas fa-car"></i> Parking</div>
-        </div>
-      `;
-      
-      carouselContainer.querySelector('.prev-btn').addEventListener('click', (e) => {
-        e.stopPropagation();
-        currentCarouselIndex = (currentCarouselIndex - 1 + popularVenues.length) % popularVenues.length;
-        renderCarouselSlide();
-      });
-      carouselContainer.querySelector('.next-btn').addEventListener('click', (e) => {
-        e.stopPropagation();
-        currentCarouselIndex = (currentCarouselIndex + 1) % popularVenues.length;
-        renderCarouselSlide();
-      });
-    };
-    renderCarouselSlide();
-    
-    // Auto-play carousel
-    if (window.carouselInterval) clearInterval(window.carouselInterval);
-    window.carouselInterval = setInterval(() => {
-      currentCarouselIndex = (currentCarouselIndex + 1) % popularVenues.length;
-      renderCarouselSlide();
-    }, 5000);
-  }
-
-  // 2. Buttons and Pills
   $('#bento-cta-host')?.addEventListener('click', () => showCreateGameModal());
-  
-  $('#bento-pill-top-rated')?.addEventListener('click', () => {
-    selectedVenueFilter = 'Top Rated';
-    navigateTo('book');
-  });
-  
-  $('#bento-pill-instant')?.addEventListener('click', () => {
-    selectedSport = 'All';
-    navigateTo('play');
-  });
-
-  // 3. Calendar Card (Personalized Upcoming Matches)
-  const calendarList = $('#bento-calendar-list');
-  if (calendarList) {
-    let upcoming = [...GAMES]
-      .filter(g => new Date(g.dateTime) >= new Date())
-      .sort((a,b) => new Date(a.dateTime) - new Date(b.dateTime));
-
-    // If logged in, show matches user is part of first
-    if (currentUser) {
-      const myUpcoming = upcoming.filter(g => 
-        g.hostId === currentUser.uid || 
-        (g.players && g.players.includes(currentUser.uid))
-      );
-      
-      if (myUpcoming.length > 0) {
-        upcoming = myUpcoming;
-      }
-    }
-
-    upcoming = upcoming.slice(0, 3);
-      
-    if (upcoming.length > 0) {
-      calendarList.innerHTML = upcoming.map(g => `
-        <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.03); padding:10px 14px; border-radius:10px; border:1px solid var(--border); margin-bottom:8px; cursor:pointer;" onclick="event.stopPropagation(); navigateTo('history')">
-          <div style="display:flex; flex-direction:column; gap:2px;">
-            <strong style="font-size:0.85rem; color:var(--text);">${g.title}</strong>
-            <span style="font-size:0.75rem; color:var(--text-muted);"><i class="far fa-calendar"></i> ${formatDate(g.date)} · ${g.time}</span>
-          </div>
-          <span class="game-sport-badge" style="font-size:0.65rem; padding: 2px 6px; border-radius: 4px; background:var(--primary-light); color:var(--primary); font-weight:600;">${g.sport.toUpperCase()}</span>
-        </div>
-      `).join('');
-    } else {
-      calendarList.innerHTML = `
-        <div style="text-align:center; padding: 15px;">
-          <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:12px;">No matches scheduled.</p>
-          <button class="btn btn-primary" style="padding:6px 12px; font-size:0.75rem;" onclick="event.stopPropagation(); navigateTo('play')">Discover Games</button>
-        </div>
-      `;
-    }
-  }
-  
-  $('#bento-calendar-container')?.addEventListener('click', () => {
-    navigateTo('history');
-  });
 }
 

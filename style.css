@@ -1212,3 +1212,457 @@ input, select { font-family: inherit; }
   flex: 1;
   overflow-y: auto;
 }
+
+/* ═══════════════════════════════════════
+   HOMEPAGE V2
+═══════════════════════════════════════ */
+
+.home-v2 { display: flex; flex-direction: column; gap: 28px; }
+
+/* ── Hero ── */
+.home-hero-v2 {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 40%, #0f3460 100%);
+  border-radius: 24px;
+  padding: 48px 44px;
+  color: white;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 32px;
+  min-height: 220px;
+  position: relative;
+  overflow: hidden;
+}
+
+.home-hero-v2::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 80% 50%, rgba(99,102,241,0.18) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.home-hero-left { position: relative; z-index: 1; }
+
+.home-hero-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  opacity: 0.6;
+  margin-bottom: 14px;
+}
+
+.live-dot {
+  width: 7px;
+  height: 7px;
+  background: #4ade80;
+  border-radius: 50%;
+  box-shadow: 0 0 0 3px rgba(74,222,128,0.25);
+  animation: livePulse 2s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+@keyframes livePulse {
+  0%, 100% { box-shadow: 0 0 0 3px rgba(74,222,128,0.25); }
+  50%       { box-shadow: 0 0 0 7px rgba(74,222,128,0.08); }
+}
+
+.home-hero-title {
+  font-size: 3.8rem;
+  font-weight: 800;
+  line-height: 1.0;
+  letter-spacing: -2px;
+  margin-bottom: 14px;
+}
+
+.home-hero-sub {
+  font-size: 1rem;
+  opacity: 0.7;
+  margin-bottom: 24px;
+}
+
+.home-hero-stats {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.home-hero-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.home-hero-stat strong {
+  font-size: 1.5rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.home-hero-stat span {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  opacity: 0.55;
+}
+
+.home-hero-stat-div {
+  width: 1px;
+  height: 32px;
+  background: rgba(255,255,255,0.15);
+}
+
+.home-hero-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: stretch;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+  min-width: 180px;
+}
+
+.home-btn-primary {
+  background: #6366f1;
+  color: white;
+  border-radius: 50px;
+  padding: 13px 24px;
+  font-weight: 700;
+  box-shadow: 0 8px 24px rgba(99,102,241,0.4);
+  white-space: nowrap;
+  justify-content: center;
+}
+
+.home-btn-primary:hover {
+  background: #4f46e5;
+  transform: translateY(-2px);
+}
+
+.home-btn-outline {
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.25);
+  color: white;
+  border-radius: 50px;
+  padding: 13px 24px;
+  font-weight: 600;
+  white-space: nowrap;
+  justify-content: center;
+}
+
+.home-btn-outline:hover {
+  background: rgba(255,255,255,0.18);
+}
+
+/* ── Section rows ── */
+.home-section-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.home-section-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+}
+
+.home-link-btn {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--primary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0;
+  opacity: 0.85;
+}
+.home-link-btn:hover { opacity: 1; }
+
+/* ── Sport Tiles ── */
+.sport-tiles-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 14px;
+}
+
+.sport-tile-v2 {
+  border-radius: 18px;
+  padding: 22px 14px 18px;
+  cursor: pointer;
+  transition: transform 0.22s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.22s;
+  text-align: center;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  user-select: none;
+}
+
+.sport-tile-v2:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.18);
+}
+
+.sport-tile-v2:active { transform: scale(0.97); }
+
+.sport-tile-icon {
+  font-size: 2.2rem;
+  line-height: 1;
+  margin-bottom: 4px;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+}
+
+.sport-tile-name {
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.sport-tile-count {
+  font-size: 0.7rem;
+  opacity: 0.75;
+  font-weight: 500;
+}
+
+/* ── Bottom 2-col layout ── */
+.home-bottom-grid {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 24px;
+  align-items: start;
+}
+
+.home-games-col { display: flex; flex-direction: column; }
+
+.home-games-stack { display: flex; flex-direction: column; gap: 12px; }
+
+/* ── Compact Game Card ── */
+.compact-game-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 18px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.compact-game-card:hover {
+  border-color: var(--primary);
+  box-shadow: 0 4px 20px rgba(79,70,229,0.08);
+}
+
+.compact-game-main { flex: 1; min-width: 0; }
+
+.compact-game-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.compact-game-fee {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.compact-game-title {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.compact-game-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+.compact-game-meta span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.compact-game-bar {
+  height: 4px;
+  background: var(--bg-app);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 6px;
+}
+
+.compact-game-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #6366f1, #8b5cf6);
+  border-radius: 2px;
+  transition: width 0.4s ease;
+}
+
+.compact-game-slots {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.compact-game-action { flex-shrink: 0; }
+
+.compact-action-btn {
+  border-radius: 50px;
+  padding: 9px 20px;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+/* ── Sidebar col ── */
+.home-sidebar-col { display: flex; flex-direction: column; gap: 14px; }
+
+/* ── Host CTA ── */
+.home-host-cta {
+  background: linear-gradient(145deg, #1e1b4b, #312e81);
+  border-radius: 20px;
+  padding: 28px 24px;
+  color: white;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.home-host-cta:hover { transform: translateY(-3px); }
+
+.home-host-icon { font-size: 2.4rem; margin-bottom: 12px; }
+
+.home-host-cta h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  line-height: 1.3;
+  margin-bottom: 10px;
+}
+
+.home-host-cta p {
+  font-size: 0.82rem;
+  opacity: 0.75;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+.home-cta-btn {
+  background: white;
+  color: #312e81;
+  font-weight: 700;
+  font-size: 0.9rem;
+  padding: 10px 0;
+  border-radius: 50px;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  transition: transform 0.15s, box-shadow 0.15s;
+  font-family: inherit;
+}
+
+.home-cta-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+/* ── Featured Venue Card ── */
+.home-venue-card {
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  transition: box-shadow 0.2s, border-color 0.2s;
+  background: var(--bg-surface);
+}
+
+.home-venue-card:hover {
+  box-shadow: var(--shadow-md);
+  border-color: var(--primary);
+}
+
+.home-venue-img {
+  height: 130px;
+  position: relative;
+  overflow: hidden;
+}
+
+.home-venue-img img { width: 100%; height: 100%; object-fit: cover; }
+
+.home-venue-img .venue-card-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+}
+
+.home-venue-body {
+  padding: 14px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.home-venue-body h4 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-bottom: 3px;
+}
+
+.home-venue-body p {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.home-venue-price {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--primary);
+  white-space: nowrap;
+}
+
+/* ── Empty State ── */
+.home-empty-state {
+  text-align: center;
+  padding: 48px 24px;
+  background: var(--bg-surface);
+  border-radius: 20px;
+  border: 2px dashed var(--border);
+}
+
+/* ── Responsive ── */
+@media (max-width: 1100px) {
+  .sport-tiles-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (max-width: 900px) {
+  .home-hero-v2 {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 32px 24px;
+    min-height: unset;
+  }
+  .home-hero-title { font-size: 2.8rem; }
+  .home-hero-actions { flex-direction: row; min-width: unset; width: 100%; }
+  .home-btn-primary, .home-btn-outline { flex: 1; }
+  .sport-tiles-grid { grid-template-columns: repeat(3, 1fr); }
+  .home-bottom-grid { grid-template-columns: 1fr; }
+  .home-sidebar-col { flex-direction: row; flex-wrap: wrap; }
+  .home-host-cta, .home-venue-card { flex: 1; min-width: 240px; }
+}
