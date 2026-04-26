@@ -45,7 +45,13 @@ function refreshCurrentPage() {
 }
 
 const SPORTS = [
-  {name:"All",icon:"🏟️"},{name:"Football",icon:"⚽"},{name:"Cricket",icon:"🏏"},{name:"Badminton",icon:"🏸"},{name:"Swimming",icon:"🏊"},{name:"Padel",icon:"🎾"},{name:"Pickleball",icon:"🏓"}
+  {name:"All", icon:"fas fa-th-large"},
+  {name:"Football", icon:"fas fa-futbol"},
+  {name:"Cricket", icon:"fas fa-bat-ball"},
+  {name:"Badminton", icon:"fas fa-shuttlecock"},
+  {name:"Swimming", icon:"fas fa-swimmer"},
+  {name:"Padel", icon:"fas fa-table-tennis-paddle-ball"},
+  {name:"Pickleball", icon:"fas fa-table-tennis-paddle-ball"}
 ];
 
 // ── State ──
@@ -56,6 +62,7 @@ let selectedCity = 'Belfast';
 let currentUser = null;
 let currentParams = null;
 let pageHistory = [];
+let searchQuery = '';
 
 // ── Helpers ──
 const $ = s => document.querySelector(s);
@@ -71,8 +78,17 @@ const toast = (msg, type='success') => {
 
 // ── Render Functions ──
 function renderSportsChips(active) {
-  const chips = SPORTS.map(s => `<div class="sport-chip ${s.name===active?'active':''}" data-sport="${s.name}"><span class="sport-icon">${s.icon}</span><span>${s.name}</span></div>`).join('');
-  return chips + `<div class="sport-chip disabled-chip" style="opacity: 0.6; cursor: default; border: 1px dashed var(--border-color); background: transparent;"><span class="sport-icon">⏳</span><span>More games coming soon</span></div>`;
+  const chips = SPORTS.map(s => `
+    <div class="sport-chip ${s.name===active?'active':''}" data-sport="${s.name}">
+      <span class="sport-icon"><i class="${s.icon}"></i></span>
+      <span>${s.name}</span>
+    </div>
+  `).join('');
+  return chips + `
+    <div class="sport-chip disabled-chip" style="opacity: 0.6; cursor: default; border: 1px dashed rgba(255,255,255,0.2); background: transparent;">
+      <span class="sport-icon"><i class="fas fa-hourglass-half"></i></span>
+      <span>More coming soon</span>
+    </div>`;
 }
 
 function renderVenueCard(v) {
@@ -100,10 +116,15 @@ function renderVenueCard(v) {
   } else {
     priceDisplay = `<span style="font-size:0.72rem;font-weight:600;line-height:1.2">${rawPrice}</span>`;
   }
-  return `<div class="venue-card" data-venue-id="${v.id}">
+  return `<div class="venue-card" data-id="${v.id}">
     <div class="venue-card-img"><img src="${img}" alt="${v.name}" loading="lazy"><span class="venue-card-badge">${sport}</span><button class="venue-card-fav" aria-label="Favorite"><i class="far fa-heart"></i></button></div>
     <div class="venue-card-body"><h3>${v.name}</h3><div class="venue-card-loc"><i class="fas fa-map-marker-alt"></i>${locDisplay}</div><div class="venue-card-tags">${tags.map(t=>`<span class="venue-tag">${t}</span>`).join('')}</div></div>
-    <div class="venue-card-footer"><div class="venue-price">${priceDisplay}</div><div class="venue-rating"><i class="fas fa-star"></i> ${rating}</div></div></div>`;
+    <div class="venue-card-footer">
+      <div class="venue-price">${priceDisplay}</div>
+      <div class="venue-rating"><i class="fas fa-star"></i> ${rating}</div>
+      <button class="btn btn-primary" style="padding:6px 16px;font-size:0.8rem;border-radius:20px;margin-left:auto">Book</button>
+    </div>
+  </div>`;
 }
 
 
@@ -163,12 +184,13 @@ function renderGameCard(g) {
 
 // ── Pages ──
 const SPORT_ICONS = {
-  Football: { emoji: '⚽', bg: '#1B5E20', dark: '#0A3D12' },
-  Cricket:  { emoji: '🏏', bg: '#E65100', dark: '#BF360C' },
-  Badminton:{ emoji: '🏸', bg: '#01579B', dark: '#003F7A' },
-  Swimming: { emoji: '🏊', bg: '#006064', dark: '#004D40' },
-  Padel:    { emoji: '🎾', bg: '#4A148C', dark: '#320D62' },
-  Pickleball:{ emoji: '🏓', bg: '#880E4F', dark: '#620839' },
+  All:        { icon: 'fas fa-th-large', bg: '#455A64', dark: '#263238' },
+  Football: { icon: 'fas fa-futbol', bg: '#1B5E20', dark: '#0A3D12' },
+  Cricket:  { icon: 'fas fa-bat-ball', bg: '#37474F', dark: '#263238' },
+  Badminton:{ icon: 'fas fa-shuttlecock', bg: '#01579B', dark: '#003F7A' },
+  Swimming: { icon: 'fas fa-swimmer', bg: '#006064', dark: '#004D40' },
+  Padel:    { icon: 'fas fa-table-tennis-paddle-ball', bg: '#4A148C', dark: '#320D62' },
+  Pickleball:{ icon: 'fas fa-table-tennis-paddle-ball', bg: '#880E4F', dark: '#620839' },
 };
 
 function renderHome() {
@@ -188,13 +210,13 @@ function renderHome() {
           <p class="home-hero-sub">Sports venues and community games across Belfast.</p>
           <div class="home-search-bar">
             <i class="fas fa-search"></i>
-            <input class="playo-search-input" id="home-search" placeholder="Search venues, sports, or games…" autocomplete="off">
-            <button class="home-search-find-btn" onclick="navigateTo('book')">Find</button>
+            <input class="playo-search-input" id="home-search" placeholder="Search venues, sports, or games…" autocomplete="off" onkeyup="if(event.key==='Enter') handleHomeSearch()">
+            <button class="home-search-find-btn" onclick="handleHomeSearch()">Find</button>
           </div>
         </div>
       </div>
 
-      <div class="page-container">
+      <div class="homepage-full-width">
 
         <!-- Sport tiles -->
         <div class="playo-section">
@@ -206,46 +228,13 @@ function renderHome() {
             ${Object.entries(SPORT_ICONS).map(([name, s]) => {
               const count = sportCounts[name] || 0;
               return `<div class="playo-sport-tile"
-                   style="background:linear-gradient(145deg,${s.bg},${s.dark})"
                    onclick="navigateToSport('${name}')">
                 ${count > 0 ? `<span class="playo-sport-badge">${count}</span>` : ''}
-                <span class="playo-sport-emoji">${s.emoji}</span>
+                <span class="playo-sport-icon-wrapper"><i class="${s.icon}"></i></span>
                 <span class="playo-sport-name">${name}</span>
               </div>`;
             }).join('')}
           </div>
-        </div>
-
-        <!-- Featured Venues -->
-        <div class="playo-section">
-          <div class="playo-section-header">
-            <h2>Popular Venues</h2>
-            <button class="playo-see-all" onclick="navigateTo('book')">See all <i class="fas fa-chevron-right" style="font-size:0.65rem"></i></button>
-          </div>
-          ${featuredVenues.length > 0
-            ? `<div class="playo-venues-grid">${featuredVenues.map(renderVenueCard).join('')}</div>`
-            : `<div class="playo-empty">No venues yet — check back soon.</div>`}
-        </div>
-
-        <!-- Games -->
-        <div class="playo-section">
-          <div class="playo-section-header">
-            <h2>Games Near You</h2>
-            <button class="playo-see-all" onclick="navigateTo('play')">See all <i class="fas fa-chevron-right" style="font-size:0.65rem"></i></button>
-          </div>
-          ${liveGames.length > 0
-            ? `<div class="playo-games-list">${liveGames.map(renderPlayoGameRow).join('')}</div>`
-            : `<div class="playo-empty">No open games right now. Hit <strong>Host Game</strong> in the nav to create one.</div>`}
-        </div>
-
-        <!-- Host CTA -->
-        <div class="playo-host-banner" id="bento-cta-host">
-          <span class="playo-host-icon">🏟️</span>
-          <div class="playo-host-content">
-            <h3>Can't find what you're looking for?</h3>
-            <p>Host your own game and find players from the community.</p>
-          </div>
-          <button class="playo-host-cta">Host a Game</button>
         </div>
 
       </div>
@@ -261,7 +250,7 @@ function renderPlayoGameRow(g) {
   return `
     <div class="playo-game-row">
       <div class="playo-game-sport-icon" style="background:linear-gradient(135deg,${sportInfo.bg},${sportInfo.dark})">
-        ${sportInfo.emoji}
+        <i class="${sportInfo.icon}"></i>
       </div>
       <div class="playo-game-info">
         <div class="playo-game-title">${g.title}</div>
@@ -292,6 +281,23 @@ function renderBook() {
     );
   }
 
+  if (searchQuery) {
+    const q = searchQuery.toLowerCase();
+    venues = venues.filter(v => {
+      const nameMatch = v.name && v.name.toLowerCase().includes(q);
+      const sportMatch = v.sport && v.sport.toLowerCase().includes(q);
+      let addrMatch = false;
+      if (typeof v.address === 'string') {
+        addrMatch = v.address.toLowerCase().includes(q);
+      } else if (v.address && typeof v.address === 'object') {
+        addrMatch = Object.values(v.address).some(val => 
+          val && val.toString().toLowerCase().includes(q)
+        );
+      }
+      return nameMatch || sportMatch || addrMatch;
+    });
+  }
+
   // Sorting logic based on selectedVenueFilter
   if (selectedVenueFilter === 'Price: Low') {
     venues.sort((a, b) => {
@@ -319,24 +325,37 @@ function renderBook() {
     // Let's sort by ID to ensure consistency, or simply leave as is.
     // For a real app, this would be based on booking frequency.
   }
+  
+  const searchUI = searchQuery ? `
+    <div class="active-search-header" style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.03); padding:12px 20px; border-radius:12px; margin-bottom:20px;">
+      <span style="font-size:0.95rem; color:var(--text-muted)">Showing results for "<strong style="color:var(--text-main)">${searchQuery}</strong>"</span>
+      <button onclick="window.clearSearch()" style="background:none; border:none; color:var(--primary); font-weight:600; cursor:pointer; font-size:0.85rem;">Clear Search</button>
+    </div>` : '';
 
   return `
     <div class="page-container">
       <button class="back-btn" onclick="goBack()"><i class="fas fa-arrow-left"></i> Back</button>
       <section class="section">
-        <div class="section-header">
+        <div class="section-header" style="display:flex; justify-content:space-between; align-items:flex-start; gap:20px; margin-bottom:30px;">
           <div class="section-header-text">
             <h2>Book Venues</h2>
             <p>Find and book the best sports facilities around you.</p>
           </div>
+          <div class="compact-search-bar" style="position:relative; width:280px;">
+            <i class="fas fa-search" style="position:absolute; left:14px; top:50%; transform:translateY(-50%); color:var(--text-muted); font-size:0.9rem;"></i>
+            <input type="text" id="inner-search" placeholder="Search venues..." value="${searchQuery}" 
+              onkeyup="if(event.key==='Enter') window.handleInnerSearch(this.value)"
+              style="width:100%; padding:10px 15px 10px 40px; border-radius:12px; border:1px solid #ddd; font-family:inherit; outline:none; font-size:0.9rem;">
+          </div>
         </div>
+        ${searchUI}
         <div class="sports-scroll">${renderSportsChips(selectedSport)}</div>
         <div class="filter-bar">
           <span class="filter-chip ${selectedVenueFilter === 'Popular' ? 'active' : ''}" data-venue-filter="Popular">Popular</span>
           <span class="filter-chip ${selectedVenueFilter === 'Price: Low' ? 'active' : ''}" data-venue-filter="Price: Low">Price: Low</span>
           <span class="filter-chip ${selectedVenueFilter === 'Top Rated' ? 'active' : ''}" data-venue-filter="Top Rated">Top Rated</span>
         </div>
-        <div class="cards-grid" id="venues-grid">${venues.length ? venues.map(renderVenueCard).join('') : '<p style="text-align:center;color:var(--text-muted);grid-column:1/-1;padding:60px 0;font-size:1.1rem;">No venues found for this sport. Try a different filter.</p>'}</div>
+        <div class="cards-grid" id="venues-grid">${venues.length ? venues.map(renderVenueCard).join('') : '<p style="text-align:center;color:var(--text-muted);grid-column:1/-1;padding:60px 0;font-size:1.1rem;">No venues found. Try a different search.</p>'}</div>
       </section>
     </div>`;
 }
@@ -347,26 +366,50 @@ function renderPlay() {
     games = games.filter(g => g.sport && g.sport.toLowerCase() === selectedSport.toLowerCase());
   }
 
+  if (searchQuery) {
+    const q = searchQuery.toLowerCase();
+    games = games.filter(g => {
+      const titleMatch = g.title && g.title.toLowerCase().includes(q);
+      const sportMatch = g.sport && g.sport.toLowerCase().includes(q);
+      const venueMatch = g.venue && g.venue.toLowerCase().includes(q);
+      const hostMatch = g.host && g.host.toLowerCase().includes(q);
+      return titleMatch || sportMatch || venueMatch || hostMatch;
+    });
+  }
+
   const emptyState = `
     <div style="grid-column:1/-1; text-align:center; padding: 60px 20px;">
       <div style="width:80px;height:80px;border-radius:50%;background:var(--primary-container);color:var(--primary);display:flex;align-items:center;justify-content:center;font-size:2.5rem;margin:0 auto 24px; opacity:0.8">
         <i class="fas fa-futbol"></i>
       </div>
-      <h3 style="font-size:1.4rem;margin-bottom:8px;color:var(--text)">No games yet${selectedSport !== 'All' ? ' for ' + selectedSport : ''}</h3>
-      <p style="color:var(--text-muted);margin-bottom:24px;max-width:360px;margin-left:auto;margin-right:auto;">Be the first to host a community game and invite players to join you.</p>
+      <h3 style="font-size:1.4rem;margin-bottom:8px;color:var(--text)">No games found</h3>
+      <p style="color:var(--text-muted);margin-bottom:24px;max-width:360px;margin-left:auto;margin-right:auto;">Try a different search or be the first to host a community game.</p>
       <button class="btn btn-primary" id="empty-create-btn"><i class="fas fa-plus"></i> Host a Game</button>
     </div>`;
+
+  const searchUI = searchQuery ? `
+    <div class="active-search-header" style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.03); padding:12px 20px; border-radius:12px; margin-bottom:20px;">
+      <span style="font-size:0.95rem; color:var(--text-muted)">Showing results for "<strong style="color:var(--text-main)">${searchQuery}</strong>"</span>
+      <button onclick="window.clearSearch()" style="background:none; border:none; color:var(--primary); font-weight:600; cursor:pointer; font-size:0.85rem;">Clear Search</button>
+    </div>` : '';
 
   return `
     <div class="page-container">
       <button class="back-btn" onclick="goBack()"><i class="fas fa-arrow-left"></i> Back</button>
       <section class="section">
-        <div class="section-header">
+        <div class="section-header" style="display:flex; justify-content:space-between; align-items:flex-start; gap:20px; margin-bottom:30px;">
           <div class="section-header-text">
-            <h2>Matches</h2>
-            <p>Join a community game or use <strong>Host Game</strong> in the nav to create one.</p>
+            <h2>Join Games</h2>
+            <p>Find community matches and connect with fellow players.</p>
+          </div>
+          <div class="compact-search-bar" style="position:relative; width:280px;">
+            <i class="fas fa-search" style="position:absolute; left:14px; top:50%; transform:translateY(-50%); color:var(--text-muted); font-size:0.9rem;"></i>
+            <input type="text" id="inner-search" placeholder="Search games..." value="${searchQuery}" 
+              onkeyup="if(event.key==='Enter') window.handleInnerSearch(this.value)"
+              style="width:100%; padding:10px 15px 10px 40px; border-radius:12px; border:1px solid #ddd; font-family:inherit; outline:none; font-size:0.9rem;">
           </div>
         </div>
+        ${searchUI}
         <div class="sports-scroll">${renderSportsChips(selectedSport)}</div>
         <div class="filter-bar">
           <span class="filter-chip active" data-time-filter="all">All Games</span>
@@ -777,7 +820,6 @@ function navigateTo(page, params = null) {
   }
   currentPage = page;
   currentParams = params;
-  selectedSport = 'All';
   $$('.nav-top-link').forEach(l => l.classList.toggle('active', l.dataset.page === page));
   refreshCurrentPage();
   const content = $('#app-content');
@@ -802,9 +844,12 @@ function navigateBack() {
 }
 
 window.navigateTo = navigateTo;
+window.navigateBack = navigateBack;
 window.goBack = navigateBack;
+window.refreshCurrentPage = refreshCurrentPage;
 window.openAuth = openAuth;
 window.toast = toast;
+window.showCreateGameModal = showCreateGameModal;
 
 function bindPageEvents() {
   if (currentPage === 'home') {
@@ -1018,7 +1063,58 @@ function bindPageEvents() {
 
 window.navigateToSport = function(sport) {
   selectedSport = sport || 'All';
-  navigateTo('play');
+  currentPage = 'play';
+  $$('.nav-top-link').forEach(l => l.classList.toggle('active', l.dataset.page === 'play'));
+  refreshCurrentPage();
+  const content = $('#app-content');
+  if (content) content.scrollTop = 0;
+  bindPageEvents();
+};
+
+window.handleHomeSearch = function() {
+  const q = $('#home-search')?.value.trim();
+  if (!q) {
+    searchQuery = '';
+    navigateTo('book');
+    return;
+  }
+  
+  searchQuery = q;
+  const lowerQ = q.toLowerCase();
+  const sports = Object.keys(SPORT_ICONS).map(s => s.toLowerCase());
+  
+  // If it's a direct sport name, filter by that sport
+  if (sports.includes(lowerQ)) {
+    selectedSport = q.charAt(0).toUpperCase() + q.slice(1).toLowerCase();
+    searchQuery = ''; // Clear search query if we are filtering by sport chip
+    navigateTo('book');
+    return;
+  }
+
+  // For general text searches, reset sport filter to 'All' to ensure broad results
+  selectedSport = 'All';
+
+  // Check if it's a game-specific search (e.g. "Friendly", "Match", or host name)
+  const isGameSearch = GAMES.some(g => 
+    (g.title && g.title.toLowerCase().includes(lowerQ)) || 
+    (g.hostName && g.hostName.toLowerCase().includes(lowerQ))
+  );
+
+  if (isGameSearch) {
+    navigateTo('play');
+  } else {
+    navigateTo('book');
+  }
+};
+
+window.handleInnerSearch = function(val) {
+  searchQuery = val.trim();
+  refreshCurrentPage();
+};
+
+window.clearSearch = function() {
+  searchQuery = '';
+  refreshCurrentPage();
 };
 
 function initDashboardComponents() {
@@ -1046,7 +1142,11 @@ document.addEventListener('DOMContentLoaded', () => {
   navigateTo('home');
 
   $$('.nav-top-link').forEach(l => {
-    l.addEventListener('click', () => navigateTo(l.dataset.page));
+    l.addEventListener('click', () => {
+      selectedSport = 'All';
+      searchQuery = '';
+      navigateTo(l.dataset.page);
+    });
   });
 
   $('#header-create-btn')?.addEventListener('click', () => showCreateGameModal());
