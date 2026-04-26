@@ -381,9 +381,8 @@ function renderPlay() {
       <div class="section-header">
         <div class="section-header-text">
           <h2>Matches</h2>
-          <p>Join community games or create your own match.</p>
+          <p>Join a community game or hit the <strong>+</strong> to host one.</p>
         </div>
-        <button class="btn btn-primary" id="create-game-btn"><i class="fas fa-plus"></i> Host Game</button>
       </div>
       <div class="sports-scroll">${renderSportsChips(selectedSport)}</div>
       <div class="filter-bar">
@@ -786,14 +785,11 @@ function navigateTo(page, params = null) {
   currentPage = page;
   currentParams = params;
   selectedSport = 'All';
-  // Clear global search when navigating
-  const searchEl = $('#global-search');
-  if (searchEl) searchEl.value = '';
-  $$('.nav-link').forEach(l => l.classList.toggle('active', l.dataset.page === page));
+  $$('.bnav-item').forEach(l => l.classList.toggle('active', l.dataset.page === page));
   refreshCurrentPage();
-  if (page !== 'home') window.scrollTo({top:0,behavior:'smooth'});
+  const content = $('#app-content');
+  if (content) content.scrollTop = 0;
   bindPageEvents();
-  $('#sidebar').classList.remove('open');
 }
 window.navigateTo = navigateTo;
 window.openAuth = openAuth;
@@ -1012,31 +1008,17 @@ function bindPageEvents() {
 document.addEventListener('DOMContentLoaded', () => {
   navigateTo('home');
 
-  // Hamburger
-  $('#nav-hamburger').addEventListener('click', () => {
-    $('#sidebar').classList.toggle('open');
+  // Bottom nav
+  $$('.bnav-item').forEach(l => {
+    l.addEventListener('click', () => navigateTo(l.dataset.page));
   });
 
-  // Nav links
-  $$('.nav-link, .mobile-link').forEach(l => {
-    l.addEventListener('click', (e) => { e.preventDefault(); navigateTo(l.dataset.page); });
-  });
-
-  // Auth buttons
-  $('#btn-login').addEventListener('click', () => { $('#sidebar').classList.remove('open'); openAuth('login'); });
-  $('#btn-signup').addEventListener('click', () => { $('#sidebar').classList.remove('open'); openAuth('signup'); });
-
-  // Header create button
+  // FAB
   $('#header-create-btn')?.addEventListener('click', () => showCreateGameModal());
 
-  // Global search filtering
-  $('#global-search')?.addEventListener('input', (e) => {
-    const term = e.target.value.toLowerCase();
-    $$('.venue-card, .game-card, .bento-card').forEach(card => {
-      const text = card.textContent.toLowerCase();
-      card.style.display = text.includes(term) ? '' : 'none';
-    });
-  });
+  // Auth buttons
+  $('#btn-login').addEventListener('click', () => openAuth('login'));
+  $('#btn-signup').addEventListener('click', () => openAuth('signup'));
 
   // Auth tabs
   $$('.auth-tab').forEach(t => {
@@ -1121,7 +1103,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Logo
-  $('#nav-logo').addEventListener('click', (e) => { e.preventDefault(); navigateTo('home'); });
+  $('#nav-logo')?.addEventListener('click', () => navigateTo('home'));
 });
 
 window.navigateToSport = function(sport) {
